@@ -1,0 +1,6 @@
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/StartCO2Application.java
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/controllers/ClientController.java
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/repositories/ClientRepository.java
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/models/Client.java
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/exceptions/CustomGlobalExceptionHandler.java
+/Users/vputtani/Downloads/CO2/src/main/java/com/co2/exceptions/ClientNotFoundException.java
