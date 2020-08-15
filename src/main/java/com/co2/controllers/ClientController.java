@@ -56,7 +56,7 @@ public class ClientController {
                 });
     }
 
-    // update author only
+    // update name only
     @PatchMapping("/clients/{id}")
     Client patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 

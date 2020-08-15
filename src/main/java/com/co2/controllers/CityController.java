@@ -55,7 +55,7 @@ public class CityController {
                 });
     }
 
-    // update author only
+    // update name only
     @PatchMapping("/cities/{id}")
     City patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 

@@ -55,7 +55,7 @@ public class DistrictController {
                 });
     }
 
-    // update author only
+    // update name only
     @PatchMapping("/districts/{id}")
     District patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 

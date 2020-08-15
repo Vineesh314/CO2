@@ -64,7 +64,7 @@ public class SensorController {
     			});
     }
     
- // update author only
+ // update name only
     @PatchMapping("/sensors/{id}")
     Sensor patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 
