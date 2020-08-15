@@ -1,12 +1,12 @@
-# Spring REST Hello World Example
-
-Article link : https://www.mkyong.com/spring-boot/spring-rest-hello-world-example/
+# Spring Boot CO2
 
 ## 1. How to start
 ```
-$ git clone https://github.com/mkyong/spring-boot.git
-$ cd spring-rest-hello-world
+$ git clone https://github.com/Vineesh314/CO2.git
+$ cd CO2
 $ mvn spring-boot:run
 
-$ curl -v localhost:8080/books
+Test in browser with below urls
+http://localhost:8080/clients
+http://localhost:8080/clients/1
 ```
