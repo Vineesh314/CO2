@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Profile;
 
 import com.co2.models.City;
 import com.co2.models.Client;
+import com.co2.models.District;
 import com.co2.repositories.CityRepository;
 import com.co2.repositories.ClientRepository;
+import com.co2.repositories.DistrictRepository;
 
 @SpringBootApplication
 public class StartCO2Application {
@@ -22,15 +24,28 @@ public class StartCO2Application {
     // run this only on profile 'demo', avoid run this in test
     @Profile("demo")
     @Bean
-    CommandLineRunner initDatabase(ClientRepository clientRepository, CityRepository cityRepository) {
+    CommandLineRunner initDatabase(ClientRepository clientRepository, CityRepository cityRepository, DistrictRepository districtRepository) {
         return args -> {
         	Client client=new Client(1L,"TOY","Toyota Motors");
         	clientRepository.save(client);
         	clientRepository.save(new Client(2L,"NIS","Nissan Vehicles"));
         	clientRepository.save(new Client(3l,"APL","Apollo Hospitals"));
             
-        	cityRepository.save(new City(1L,"MCH","Munich",client));
-        	cityRepository.save(new City(2L,"BLN","Berlin",client));
+        	City city1 = new City(1L,"MCH","Munich",client);
+        	cityRepository.save(city1);
+        	City city2 = new City(2L,"BLN","Berlin",client);
+        	cityRepository.save(city2);
+        	
+        	District district1 = new District(1L, "LEH", "Lehel", city1);
+        	districtRepository.save(district1);
+        	district1 = new District(2L, "Sch", "Schwabing ", city1);
+        	districtRepository.save(district1);
+        	
+        	district1 = new District(3L, "LIC", "Lichtenberg ", city2);
+        	districtRepository.save(district1);
+        	district1 = new District(4L, "PAN", "Pankow ", city2);
+        	districtRepository.save(district1);
+        	
         };
     }
 }
