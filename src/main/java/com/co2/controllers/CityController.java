@@ -69,7 +69,7 @@ public class CityController {
 	
 	@ApiOperation(value = "Delete city by id", notes = "This service is to delete a single city", tags = {"City"}, httpMethod = "DELETE")
 	@DeleteMapping("/cities/{id}")
-	void deleteClient(@PathVariable Long id) {
+	void deleteCity(@PathVariable Long id) {
 		cityService.deleteById(id);
 	}
 	

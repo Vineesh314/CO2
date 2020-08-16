@@ -69,7 +69,7 @@ public class DistrictController {
 
     @ApiOperation(value = "Delete district by id", notes = "This service is to delete a single district", tags = {"District"}, httpMethod = "DELETE")
     @DeleteMapping("/districts/{id}")
-    void deleteClient(@PathVariable Long id) {
+    void deleteDistrict(@PathVariable Long id) {
 		districtService.deleteById(id);
     }
 
