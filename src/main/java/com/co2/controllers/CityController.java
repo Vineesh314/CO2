@@ -1,87 +1,68 @@
 package com.co2.controllers;
 
-import com.co2.exceptions.CityNotFoundException;
-import com.co2.models.City;
-import com.co2.repositories.CityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.co2.models.City;
+import com.co2.services.CityService;
 
 @RestController
 public class CityController {
 
-    @Autowired
-    private CityRepository repository;
+	@Autowired
+	private CityService cityService;
 
-    // Find
-    @GetMapping("/cities")
-    List<City> findAll() {
-        return repository.findAll();
-    }
+	// Find
+	@GetMapping("/cities")
+	List<City> findAll() {
+		return cityService.findAll();
+	}
 
-    // Save
-    @PostMapping("/cities")
-    //return 201 instead of 200
-    @ResponseStatus(HttpStatus.CREATED)
-    City newCity(@RequestBody City newCity) {
-        return repository.save(newCity);
-    }
+	// Save
+	@PostMapping("/cities")
+	// return 201 instead of 200
+	@ResponseStatus(HttpStatus.CREATED)
+	City newCity(@RequestBody City newCity) {
+		return cityService.save(newCity);
+	}
 
-    // Find
-    @GetMapping("/cities/{id}")
-    City findOne(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new CityNotFoundException(id));
-    }
+	// Find
+	@GetMapping("/cities/{id}")
+	City findOne(@PathVariable Long id) {
+		return cityService.findById(id);
+	}
 
-    // Save or update
-    @PutMapping("/cities/{id}")
-    City saveOrUpdate(@RequestBody City newCity, @PathVariable Long id) {
+	// Save or update
+	@PutMapping("/cities/{id}")
+	City saveOrUpdate(@RequestBody City newCity, @PathVariable Long id) {
 
-        return repository.findById(id)
-                .map(x -> {
-                    x.setCityId(newCity.getCityId());
-                    x.setCityCode(newCity.getCityCode());
-                    x.setCityName(newCity.getCityName());
-                    return repository.save(x);
-                })
-                .orElseGet(() -> {
-                	newCity.setCityId(id);
-                    return repository.save(newCity);
-                });
-    }
+		return cityService.saveOrUpdate(newCity, id);
 
-    // update name only
-    @PatchMapping("/cities/{id}")
-    City patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
+	}
 
-        return repository.findById(id)
-                .map(x -> {
+	// update name only
+	@PatchMapping("/cities/{id}")
+	City patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 
-                    String cityName = update.get("cityName");
-                    if (!StringUtils.isEmpty(cityName)) {
-                        x.setCityName(cityName);
+		return cityService.patch(update, id);
 
-                        // better create a custom method to update a value = :newValue where id = :id
-                        return repository.save(x);
-                    } else {
-                        throw new CityNotFoundException(id);
-                    }
+	}
 
-                })
-                .orElseGet(() -> {
-                    throw new CityNotFoundException(id);
-                });
-
-    }
-
-    @DeleteMapping("/cities/{id}")
-    void deleteClient(@PathVariable Long id) {
-        repository.deleteById(id);
-    }
+	@DeleteMapping("/cities/{id}")
+	void deleteClient(@PathVariable Long id) {
+		cityService.deleteById(id);
+	}
 
 }

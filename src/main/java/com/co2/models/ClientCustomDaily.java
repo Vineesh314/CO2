@@ -3,7 +3,7 @@ package com.co2.models;
 import java.util.List;
 
 
-public class ClientCustomDaily {
+public class ClientCustomDaily implements Co2ReadingMarkerInterface{
 	
     private String clientName;
     private List<CityCustomDaily> cityList;

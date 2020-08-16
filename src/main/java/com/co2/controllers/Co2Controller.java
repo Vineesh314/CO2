@@ -8,62 +8,56 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.co2.exceptions.DistrictNotFoundException;
 import com.co2.models.CO2Reading;
+import com.co2.models.ClientCustomDaily;
+import com.co2.models.Co2ReadingMarkerInterface;
+import com.co2.models.Type;
 import com.co2.repositories.Co2ReadingRepository;
 import com.co2.services.Co2ReadingService;
 
 @RestController
 public class Co2Controller {
-
-    @Autowired
-    private Co2ReadingRepository repository;
     
     @Autowired
     private Co2ReadingService co2ReadingService;
 
+    @GetMapping("/co2report/{type}")
+    public Co2ReadingMarkerInterface Co2readings(@PathVariable Type type, @RequestParam("clientId") Long clientId) {
+    	return co2ReadingService.getCo2Reports(type,clientId);
+		
+	}
+    
     // Save
     @PostMapping("/co2reading")
     //return 201 instead of 200
     @ResponseStatus(HttpStatus.CREATED)
     CO2Reading newCo2reading(@RequestBody CO2Reading newCO2Reading) {
-        return repository.save(newCO2Reading);
+    	return co2ReadingService.save(newCO2Reading);
     }
 
     // Find
     @GetMapping("/co2reading/{id}")
     CO2Reading findOne(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new DistrictNotFoundException(id));
+    	return co2ReadingService.findById(id);
+                
     }
 
     // Save or update
     @PutMapping("/co2reading/{id}")
     CO2Reading saveOrUpdate(@RequestBody CO2Reading newCO2Reading, @PathVariable Long id) {
+    	return co2ReadingService.saveOrUpdate(id, newCO2Reading);
 
-        return repository.findById(id)
-                .map(x -> {
-                    x.setDistrict(newCO2Reading.getDistrict());
-                    x.setCity(newCO2Reading.getCity());
-                    x.setClient(newCO2Reading.getClient());
-                    x.setConcentration(newCO2Reading.getConcentration());
-                    x.setSensor(newCO2Reading.getSensor());
-                    x.setDateTime(newCO2Reading.getDateTime());
-                    return repository.save(x);
-                })
-                .orElseGet(() -> {
-                	newCO2Reading.setId(id);
-                    return repository.save(newCO2Reading);
-                });
     }
 
 
     @DeleteMapping("/co2reading/{id}")
     void deleteClient(@PathVariable Long id) {
-        repository.deleteById(id);
+    	co2ReadingService.deleteById(id);
     }
 
 }

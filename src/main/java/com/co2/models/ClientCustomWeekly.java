@@ -1,7 +1,7 @@
 package com.co2.models;
 
 import java.util.List;
-public class ClientCustomWeekly {
+public class ClientCustomWeekly implements Co2ReadingMarkerInterface{
 	
     private String clientName;
     private List<CityCustomWeekly> cityList;

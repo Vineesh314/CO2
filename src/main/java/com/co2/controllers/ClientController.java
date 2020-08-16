@@ -1,27 +1,33 @@
 package com.co2.controllers;
 
-import com.co2.exceptions.ClientNotFoundException;
-import com.co2.models.Client;
-import com.co2.repositories.ClientRepository;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import com.co2.models.Client;
+import com.co2.services.ClientService;
 
 @RestController
 public class ClientController {
 
     @Autowired
-    private ClientRepository repository;
+    private ClientService clientService;
 
     // Find
     @GetMapping("/clients")
     List<Client> findAll() {
-        return repository.findAll();
+        return clientService.findAll();
     }
 
     // Save
@@ -29,60 +35,35 @@ public class ClientController {
     //return 201 instead of 200
     @ResponseStatus(HttpStatus.CREATED)
     Client newClient(@RequestBody Client newClient) {
-        return repository.save(newClient);
+        return clientService.save(newClient);
     }
 
     // Find
     @GetMapping("/clients/{id}")
     Client findOne(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ClientNotFoundException(id));
+        return clientService.findById(id);
     }
 
     // Save or update
     @PutMapping("/clients/{id}")
     Client saveOrUpdate(@RequestBody Client newClient, @PathVariable Long id) {
 
-        return repository.findById(id)
-                .map(x -> {
-                    x.setClientId(newClient.getClientId());
-                    x.setClientCode(newClient.getClientCode());
-                    x.setClientName(newClient.getClientName());
-                    return repository.save(x);
-                })
-                .orElseGet(() -> {
-                    newClient.setClientId(id);
-                    return repository.save(newClient);
-                });
+    	return clientService.saveOrUpdate(newClient,id);
+
     }
 
     // update name only
     @PatchMapping("/clients/{id}")
     Client patch(@RequestBody Map<String, String> update, @PathVariable Long id) {
 
-        return repository.findById(id)
-                .map(x -> {
+    	return clientService.patch(update,id);
 
-                    String clientName = update.get("clientName");
-                    if (!StringUtils.isEmpty(clientName)) {
-                        x.setClientName(clientName);
-
-                        // better create a custom method to update a value = :newValue where id = :id
-                        return repository.save(x);
-                    } else {
-                        throw new ClientNotFoundException(id);
-                    }
-
-                })
-                .orElseGet(() -> {
-                    throw new ClientNotFoundException(id);
-                });
 
     }
 
     @DeleteMapping("/clients/{id}")
     void deleteClient(@PathVariable Long id) {
-        repository.deleteById(id);
+    	clientService.deleteClient(id);
     }
 
 }
