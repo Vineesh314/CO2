@@ -6,12 +6,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
+import com.co2.models.CO2Reading;
 import com.co2.models.City;
 import com.co2.models.Client;
 import com.co2.models.District;
 import com.co2.models.Sensor;
 import com.co2.repositories.CityRepository;
 import com.co2.repositories.ClientRepository;
+import com.co2.repositories.Co2ReadingRepository;
 import com.co2.repositories.DistrictRepository;
 import com.co2.repositories.SensorRepository;
 
@@ -27,7 +29,7 @@ public class StartCO2Application {
     @Profile("demo")
     @Bean
    CommandLineRunner initDatabase(ClientRepository clientRepository, CityRepository cityRepository,
-			DistrictRepository districtRepository, SensorRepository sensorRepository) {
+			DistrictRepository districtRepository, SensorRepository sensorRepository, Co2ReadingRepository co2ReadingRepository) {
 		return args -> {
 			Client client = new Client(1L, "TOY", "Toyota Motors");
 			clientRepository.save(client);
@@ -54,6 +56,8 @@ public class StartCO2Application {
 
 			sensor1 = new Sensor(2L, "CO2Sensor2", "CO2S2", district1);
 			sensorRepository.save(sensor1);
+			
+			co2ReadingRepository.save(new CO2Reading(1L, client, district1, city1,sensor1, 1.02, new java.sql.Date(System.currentTimeMillis())));
 		};
 	}
 }

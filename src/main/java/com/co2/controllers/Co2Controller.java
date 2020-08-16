@@ -46,16 +46,16 @@ public class Co2Controller {
 
         return repository.findById(id)
                 .map(x -> {
-                    x.setDistrictId(newCO2Reading.getDistrictId());
-                    x.setCityId(newCO2Reading.getCityId());
-                    x.setClientId(newCO2Reading.getClientId());
+                    x.setDistrict(newCO2Reading.getDistrict());
+                    x.setCity(newCO2Reading.getCity());
+                    x.setClient(newCO2Reading.getClient());
                     x.setConcentration(newCO2Reading.getConcentration());
-                    x.setSensorId(newCO2Reading.getSensorId());
+                    x.setSensor(newCO2Reading.getSensor());
                     x.setDateTime(newCO2Reading.getDateTime());
                     return repository.save(x);
                 })
                 .orElseGet(() -> {
-                	newCO2Reading.setDistrictId(id);
+                	newCO2Reading.setId(id);
                     return repository.save(newCO2Reading);
                 });
     }
