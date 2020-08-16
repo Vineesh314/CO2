@@ -33,6 +33,10 @@ public class DistrictService {
 		return districtRepository.findByCity_cityId(cityId);
 	}
 	
+	public Integer sensorCount(Long districtId){
+		return districtRepository.countDistinctSensorBydistrictId(districtId);
+	}
+	
 	public District saveOrUpdate(District newDistrict, Long id) {
 		return districtRepository.findById(id).map(x -> {
 			x.setDistrictId(newDistrict.getDistrictId());

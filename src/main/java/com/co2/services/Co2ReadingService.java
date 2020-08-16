@@ -52,6 +52,8 @@ public class Co2ReadingService {
 
 		Client client = clientService.findById(clientId);
 		System.out.println("client===" + client.toString());
+		ClientCustomDaily clientCustomDaily=new ClientCustomDaily();
+		
 		if (client != null) {
 			List<City> cityList = cityService.findByClient_Id(clientId);
 			System.out.println("cityList===" + cityList.toString());
@@ -60,11 +62,23 @@ public class Co2ReadingService {
 				List<District> districtList = districtService.findByCity_Id(city.getCityId());
 				for (District district : districtList) {
 					System.out.println("district===" + district.toString());
+					Integer sensorCount =districtService.sensorCount(district.getDistrictId());
+					System.out.println("SensorCount===" + sensorCount);
+					List<CO2Reading> co2ReadingList=co2ReadingRepository.findByDistrict_districtId(district.getDistrictId());
+					for(CO2Reading co2Reading:co2ReadingList) {
+						System.out.println("co2Reading===" + co2Reading.toString());
+					}
 				}
 			}
 		}
-
-		return new ClientCustomDaily();
+		
+		List<CO2Reading> co2ReadingList= co2ReadingRepository.findByClient_clientId(clientId);
+		for(CO2Reading co2Reading:co2ReadingList) {
+			clientCustomDaily.setClientName(co2Reading.getClient().getClientName());
+			List<City> cityList = cityService.findByClient_Id(clientId);
+		}
+		System.out.println("co2ReadingList===" + co2ReadingList.toString());
+		return clientCustomDaily;
 	}
 
 	public ClientCustomWeekly getClientCustomWeekly(Long clientId) {

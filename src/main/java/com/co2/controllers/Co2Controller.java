@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.co2.exceptions.DistrictNotFoundException;
 import com.co2.models.CO2Reading;
-import com.co2.models.ClientCustomDaily;
 import com.co2.models.Co2ReadingMarkerInterface;
 import com.co2.models.Type;
-import com.co2.repositories.Co2ReadingRepository;
 import com.co2.services.Co2ReadingService;
 
 @RestController
