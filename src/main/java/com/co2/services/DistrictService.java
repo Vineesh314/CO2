@@ -42,6 +42,7 @@ public class DistrictService {
 			x.setDistrictId(newDistrict.getDistrictId());
 			x.setDistrictCode(newDistrict.getDistrictCode());
 			x.setDistrictName(newDistrict.getDistrictName());
+			//x.setCity(newDistrict.getCity());
 			return districtRepository.save(x);
 		}).orElseGet(() -> {
 			newDistrict.setDistrictId(id);

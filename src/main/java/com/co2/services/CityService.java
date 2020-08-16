@@ -37,6 +37,7 @@ public class CityService {
 			x.setCityId(newCity.getCityId());
 			x.setCityCode(newCity.getCityCode());
 			x.setCityName(newCity.getCityName());
+			//x.setClient(newCity.getClient());
 			return cityRepository.save(x);
 		}).orElseGet(() -> {
 			newCity.setCityId(id);
