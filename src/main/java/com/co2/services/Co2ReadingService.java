@@ -1,5 +1,7 @@
 package com.co2.services;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.co2.models.CO2Reading;
 import com.co2.models.City;
+import com.co2.models.CityCustomWeekly;
 import com.co2.models.Client;
 import com.co2.models.ClientCustomDaily;
 import com.co2.models.ClientCustomMonthly;
 import com.co2.models.ClientCustomWeekly;
 import com.co2.models.Co2ReadingMarkerInterface;
 import com.co2.models.District;
+import com.co2.models.DistrictCustomWeekly;
 import com.co2.models.Type;
 import com.co2.repositories.Co2ReadingRepository;
 
@@ -83,7 +87,102 @@ public class Co2ReadingService {
 
 	public ClientCustomWeekly getClientCustomWeekly(Long clientId) {
 
-		return new ClientCustomWeekly();
+		Client client = clientService.findById(clientId);
+		System.out.println("client===" + client.toString());
+		ClientCustomWeekly clientCustomWeekly=new ClientCustomWeekly();
+		List<CityCustomWeekly> cityCustomWeeklyList = new ArrayList<CityCustomWeekly>();
+		List<DistrictCustomWeekly> districtCustomWeeklyList = new ArrayList<DistrictCustomWeekly>();
+	
+		Date endDate = new Date(System.currentTimeMillis());
+		Date startDate = new Date(endDate.getYear(),endDate.getMonth(),endDate.getDay()-6);
+		
+		double districtAvgCO2Units =0;
+		double districtMaxCO2Units =0;
+		double districtMinCO2Units =0;
+		
+		if (client != null) {
+			List<City> cityList = cityService.findByClient_Id(clientId);
+			System.out.println("cityList===" + cityList.toString());
+			long cityAvgCO2Units = (long) 0;
+			long cityMinCO2Units =(long) 0;
+			long cityMaxCO2Units =(long) 0;
+			int cityCount = 0;
+			for (City city : cityList) {
+				cityCount++;
+				System.out.println("city===" + city.toString());
+				CityCustomWeekly cityCustomWeekly = new CityCustomWeekly();
+				List<District> districtList = districtService.findByCity_Id(city.getCityId());
+				for (District district : districtList) {
+					System.out.println("district===" + district.toString());
+					Integer sensorCount =districtService.sensorCount(district.getDistrictId());
+					System.out.println("SensorCount===" + sensorCount);
+					List<CO2Reading> co2ReadingList=co2ReadingRepository.findByDistrict_districtId(district.getDistrictId());
+					districtAvgCO2Units = 0;
+					districtMaxCO2Units=0;
+					districtMinCO2Units=0;
+					int readings =0;
+					int length =0;
+					for(CO2Reading co2Reading:co2ReadingList) {
+//						Date startDate = new Date(System.currentTimeMillis()-7);
+						Date date = co2Reading.getDateTime();
+						if(co2Reading.getDateTime().compareTo(startDate)>=0) {
+							districtAvgCO2Units += co2Reading.getConcentration();
+							if(co2Reading.getConcentration()>districtMaxCO2Units)
+								districtMaxCO2Units = co2Reading.getConcentration();
+							if(co2Reading.getConcentration()<districtMinCO2Units)
+								districtMinCO2Units = co2Reading.getConcentration();
+							readings++;
+						}
+						System.out.println("co2Reading===" + co2Reading.toString());
+						
+					}
+					if(districtAvgCO2Units != 0) {
+						districtAvgCO2Units /=readings;
+						System.out.println("districtAvgCO2Units is "+ districtAvgCO2Units);
+					}
+					if(readings>0) {
+						DistrictCustomWeekly districtCustomWeekly = new DistrictCustomWeekly();
+						districtCustomWeekly.setAvgCO2Units((long) districtAvgCO2Units);
+						districtCustomWeekly.setDistrictCode(district.getDistrictCode());
+						districtCustomWeekly.setDistrictName(district.getDistrictName());
+						
+						districtCustomWeekly.setStartDate(startDate);;
+						districtCustomWeekly.setEndDate(endDate);
+						districtCustomWeekly.setMaxCO2Units((long) districtMaxCO2Units);
+						districtCustomWeekly.setMinCO2Units((long) districtMinCO2Units);
+						districtCustomWeeklyList.add(districtCustomWeekly);
+						cityAvgCO2Units += districtAvgCO2Units;
+						if(districtMaxCO2Units>cityMaxCO2Units)
+							cityMaxCO2Units = (long) districtMaxCO2Units;
+						if(districtMinCO2Units < cityMinCO2Units)
+							cityMinCO2Units = (long) districtMinCO2Units;
+						System.out.println(districtMaxCO2Units+" > "+cityMaxCO2Units);
+					}
+					
+//					readings = 0;
+//					districtAvgCO2Units = 0;
+				}
+				if(cityCount>0) {
+					cityCustomWeekly.setAvgCO2Units((long)cityAvgCO2Units);
+					cityCustomWeekly.setCityCode(city.getCityCode());
+					cityCustomWeekly.setCityName(city.getCityName());
+					cityCustomWeekly.setDistrictList(districtCustomWeeklyList);
+					cityCustomWeekly.setEndDate(endDate);
+					cityCustomWeekly.setMaxCO2Units(cityMaxCO2Units);
+					cityCustomWeekly.setMinCO2Units(cityMinCO2Units);
+					cityCustomWeekly.setStartDate(startDate);
+					cityCustomWeeklyList.add(cityCustomWeekly);
+				}
+				
+			}
+			clientCustomWeekly.setClientName(client.getClientName());
+			clientCustomWeekly.setCityList(cityCustomWeeklyList);
+		}
+		
+
+//		System.out.println("co2ReadingList===" + co2ReadingList.toString());
+//		System.out.println(new Date(System.currentTimeMillis()-2));
+		return clientCustomWeekly;
 	}
 
 	public ClientCustomMonthly getClientCustomMonthly(Long clientId) {
