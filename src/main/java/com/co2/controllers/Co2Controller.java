@@ -17,19 +17,27 @@ import com.co2.models.Co2ReadingMarkerInterface;
 import com.co2.models.Type;
 import com.co2.services.Co2ReadingService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@EnableSwagger2
+@Api
 @RestController
 public class Co2Controller {
     
     @Autowired
     private Co2ReadingService co2ReadingService;
 
+    
+    @ApiOperation(value = "Get CO2 report", notes = "This service is to get CO2 report based on type parameter", tags = {"CO2 Reading"}, httpMethod = "GET")
     @GetMapping("/co2report/{type}")
     public Co2ReadingMarkerInterface Co2readings(@PathVariable Type type, @RequestParam("clientId") Long clientId) {
     	return co2ReadingService.getCo2Reports(type,clientId);
-		
 	}
     
     // Save
+    @ApiOperation(value = "Save CO2 Reading", notes = "This service is to save CO2 reading from sensor", tags = {"CO2 Reading"}, httpMethod = "POST")
     @PostMapping("/co2reading")
     //return 201 instead of 200
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,20 +46,20 @@ public class Co2Controller {
     }
 
     // Find
+    @ApiOperation(value = "Find CO2 reading", notes = "This service is to fetch a single CO2 reading", tags = {"CO2 Reading"}, httpMethod = "GET")
     @GetMapping("/co2reading/{id}")
     CO2Reading findOne(@PathVariable Long id) {
     	return co2ReadingService.findById(id);
-                
     }
 
     // Save or update
+    @ApiOperation(value = "Save or Update CO2 reading", notes = "This service is to save or update CO2 reading", tags = {"CO2 Reading"}, httpMethod = "PUT")
     @PutMapping("/co2reading/{id}")
     CO2Reading saveOrUpdate(@RequestBody CO2Reading newCO2Reading, @PathVariable Long id) {
     	return co2ReadingService.saveOrUpdate(id, newCO2Reading);
-
     }
 
-
+    @ApiOperation(value = "Delete a single CO2 reading by id", notes = "This service is to delete a single CO2 reading", tags = {"CO2 Reading"}, httpMethod = "DELETE")
     @DeleteMapping("/co2reading/{id}")
     void deleteClient(@PathVariable Long id) {
     	co2ReadingService.deleteById(id);
