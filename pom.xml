@@ -23,7 +23,10 @@
 	</properties>
 
 	<dependencies>
-
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
 		<!-- spring mvc, rest -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -28,18 +28,21 @@ public class Client {
 	public Long getClientId() {
 		return clientId;
 	}
+	
 	public void setClientId(Long clientId) {
 		this.clientId = clientId;
 	}
 	public String getClientCode() {
 		return clientCode;
 	}
+	
 	public void setClientCode(String clientCode) {
 		this.clientCode = clientCode;
 	}
 	public String getClientName() {
 		return clientName;
 	}
+	
 	public void setClientName(String clientName) {
 		this.clientName = clientName;
 	}

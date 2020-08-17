@@ -38,7 +38,7 @@ public class City {
 	public Long getCityId() {
 		return cityId;
 	}
-
+	
 	public void setCityId(Long cityId) {
 		this.cityId = cityId;
 	}
@@ -46,7 +46,7 @@ public class City {
 	public String getCityCode() {
 		return cityCode;
 	}
-
+	
 	public void setCityCode(String cityCode) {
 		this.cityCode = cityCode;
 	}
@@ -54,7 +54,7 @@ public class City {
 	public String getCityName() {
 		return cityName;
 	}
-
+	
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
 	}
@@ -62,7 +62,7 @@ public class City {
 	public Client getClient() {
 		return client;
 	}
-
+	
 	public void setClient(Client client) {
 		this.client = client;
 	}

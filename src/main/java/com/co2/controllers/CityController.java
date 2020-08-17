@@ -31,7 +31,7 @@ public class CityController {
 	private CityService cityService;
 
 	// Find
-	@ApiOperation(value = "List all cities", notes = "This service is to list all cities configured", tags = {"City"}, httpMethod = "GET")
+	@ApiOperation(value = "List all cities", notes = "This service is to list all cities configured", tags = {"City"}, httpMethod = "GET", produces = "application/xml")
 	@GetMapping("/cities")
 	List<City> findAll() {
 		return cityService.findAll();
